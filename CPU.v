@@ -1,6 +1,8 @@
 module CPU(
         input clk,
         input rst,
+        output memRead_MEM,
+        output memWrite_MEM,
         output [31:0] memAddr,
         output [31:0] memDat,
         input [31:0] deviceData
@@ -112,7 +114,7 @@ module CPU(
 
     // MEM
 
-    wire memWrite_MEM, regWrite_MEM, memRead_MEM;
+    wire regWrite_MEM;
     wire [1:0] memtoReg_MEM;
     wire [31:0] ALUResult_MEM;
     wire [31:0] readData2_MEM;
@@ -120,14 +122,22 @@ module CPU(
     wire [31:0] memData;
     wire [31:0] PC4_MEM;
 
+    wire [31:0] readMemData;
+
     RegBetween #(32+32+32+1+2+1+1+5) EXMEM(clk, rst,{ALUResult, writeDataForward, PC4_EX, memWrite_EX, memtoReg_EX, regWrite_EX, memRead_EX,  writeBackAddr},
                                            {ALUResult_MEM, readData2_MEM, PC4_MEM, memWrite_MEM, memtoReg_MEM, regWrite_MEM, memRead_MEM,  writeBackAddr_MEM}, 2'b00);
 
+    assign readMemData = (ALUResult_MEM[31:28] == 4'h4)? deviceData: memData;
 
-    DataMemory DM(rst, clk, memRead_MEM, memWrite_MEM, ALUResult_MEM, readData2_MEM, memData);
+    wire DMmemRead, DMmemWrite;
 
-    assign memAddr = (ALUResult_MEM > 32'h40000000)? ALUResult_MEM : 0;
-    assign memDat = (ALUResult_MEM > 32'h40000000)? readData2_MEM : 0;
+    assign DMmemWrite = (ALUResult_MEM[31:28] == 4'h4)? 0 : memWrite_MEM;
+    assign DMmemRead = (ALUResult_MEM[31:28] == 4'h4)? 0 : memRead_MEM;
+
+    DataMemory DM(rst, clk, DMmemRead, DMmemWrite, ALUResult_MEM, readData2_MEM, memData);
+
+    assign memAddr = (ALUResult_MEM[31:28] == 4'h4)? ALUResult_MEM : 0;
+    assign memDat = (ALUResult_MEM[31:28] == 4'h4)? readData2_MEM : 0;
 
     // WB
 
@@ -136,7 +146,7 @@ module CPU(
     wire [31:0] memData_WB;
     wire [4:0] writeBackAddr_WB;
     wire [31:0] PC4_WB;
-    RegBetween #(32+32+32+2+1+5) MEMWB(clk, rst, {PC4_MEM, memData, ALUResult_MEM, memtoReg_MEM, regWrite_MEM, writeBackAddr_MEM},
+    RegBetween #(32+32+32+2+1+5) MEMWB(clk, rst, {PC4_MEM, readMemData, ALUResult_MEM, memtoReg_MEM, regWrite_MEM, writeBackAddr_MEM},
                                        {PC4_WB, memData_WB, ALUResult_WB, memtoReg_WB, regWrite_WB, writeBackAddr_WB}, 2'b00);
 
     assign writeAddr = writeBackAddr_WB;
