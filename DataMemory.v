@@ -9,7 +9,7 @@ module DataMemory(
     );
 
     // RAM size is 256 words, each word is 32 bits, valid address is 8 bits
-    parameter RAM_SIZE      = 1100;
+    parameter RAM_SIZE      = 1089;
      parameter RAM_SIZE_BIT  = 13;
 
     // RAM_data is an array of 256 32-bit registers

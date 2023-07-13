@@ -2,6 +2,7 @@ module CPU(
         input clk,
         input rst,
         output [31:0] memAddr,
+        output [31:0] memDat,
         input [31:0] deviceData
     );
 
@@ -125,7 +126,8 @@ module CPU(
 
     DataMemory DM(rst, clk, memRead_MEM, memWrite_MEM, ALUResult_MEM, readData2_MEM, memData);
 
-    assign memAddr = ALUResult;
+    assign memAddr = (ALUResult_MEM > 32'h40000000)? ALUResult_MEM : 0;
+    assign memDat = (ALUResult_MEM > 32'h40000000)? readData2_MEM : 0;
 
     // WB
 

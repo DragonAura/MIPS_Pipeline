@@ -53,14 +53,6 @@ module ALU(in1, in2, ALUCtl, Sign, BranchType, out, zero);
             out <= (in2 >> in1[4:0]);
         5'b11001:
             out <= ({{32{in2[31]}}, in2} >> in1[4:0]);
-        5'b00011:
-            out <= in1 * in2;
-        5'b00100:
-            out <= in1 > 0 ? 1 : 0;
-        5'b00101:
-            out <= in1 >= 0 ? 1 : 0;
-        5'b00011:
-            out <= in1 <= 0 ? 1 : 0;
         default:
             out <= 32'h00000000;
     endcase
