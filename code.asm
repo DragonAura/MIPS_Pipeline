@@ -235,10 +235,10 @@ add_end:
     lw $s4, 0($s4)
     lw $s5, 0($s5)
 
-    addi $s5, $s5, 256
-    addi $s4, $s4, 512
-    addi $s3, $s3, 1024
-    addi $s2, $s2, 2048
+    addi $s5, $s5, 512
+    addi $s4, $s4, 1024
+    addi $s3, $s3, 2048
+    addi $s2, $s2, 256
 
     li $t4, 0
     li $t5, 114514
