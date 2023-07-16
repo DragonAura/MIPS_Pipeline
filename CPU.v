@@ -168,6 +168,6 @@ module CPU(
 
     // Hazard Unit
 
-    Hazard hazardUnit(writeAddr1, readAddr1, readAddr2, branch, branch_EX, zero, memRead_EX, PCSrc, PCFlush, IFIDFlush, IDEXFlush);
+    Hazard hazardUnit(writeAddr1, readAddr1, readAddr2, branch_EX, zero, memRead_EX, PCSrc, PCFlush, IFIDFlush, IDEXFlush);
 
 endmodule

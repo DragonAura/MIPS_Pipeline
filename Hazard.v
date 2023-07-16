@@ -2,7 +2,6 @@ module Hazard(
         input [4:0] IDEXRt,
         input [4:0] IFIDRs,
         input [4:0] IFIDRt,
-        input branch_ID,
         input branch_EX,
         input zero,
         input memRead,
