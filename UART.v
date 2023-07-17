@@ -9,6 +9,8 @@ module UART(
         output [31:0] uartData,
         output tx
     );
+
+    parameter CLKS_PER_BIT = 8802;
     reg [31:0] dataToUART;
     reg [31:0] dataToCPU;
     reg [2:0] UARTControl;
@@ -18,14 +20,14 @@ module UART(
     wire txDone;
     wire [7:0] rxData;
 
-    uart_rx rxUnit(
+    uart_rx #(CLKS_PER_BIT) rxUnit(
                 .i_Clock(clk),
                 .i_Rx_Serial(rx),
                 .o_Rx_DV(rxFinish),
                 .o_Rx_Byte(rxData)
             );
 
-    uart_tx txUnit(
+    uart_tx #(CLKS_PER_BIT) txUnit(
                 .i_Clock(clk),
                 .i_Tx_DV(txStart),
                 .o_Tx_Serial(tx),
